@@ -1,0 +1,56 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    text-align: center;
+}
+
+.container {
+    margin: 50px auto;
+}
+
+h1 {
+    color: maroon;
+}
+
+h2 {
+    margin-top: 20px;
+}
+
+.form-group {
+    display: flex; /* Use flexbox for horizontal alignment */
+    justify-content: space-between; /* Space between label and select */
+    align-items: center; /* Center vertically */
+    width: 40%; /* Set width to 40% of the page */
+    margin: 30px auto; /* Increased margin for vertical space */
+}
+
+label {
+    color: maroon;
+    margin-right: 10px; /* Space between label and select */
+    font-size: 1em; /* Match font size with input fields */
+}
+
+select {
+    padding: 10px;
+    font-size: 1em; /* Font size for select */
+    border: 1px solid maroon;
+    border-radius: 5px;
+    flex-grow: 1; /* Allow select to take remaining space */
+    width: 100%; /* Ensure select takes full width */
+}
+
+.generate-button {
+    background-color: maroon;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: transform 0.3s, background 0.3s;
+}
+
+.generate-button:hover {
+    transform: scale(1.1);
+    background: linear-gradient(to right, gold, maroon);
+}
