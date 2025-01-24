@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rooms Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Light background for contrast */
+        }
+        .navbar {
+            background-color: #800020 !important;
+        }
+        .container {
+            margin-top: 20px;
+        }
+        .card {
+            border: none; /* Remove border */
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+        }
+        .table {
+            background-color: #ffffff; /* White background for the table */
+            border-radius: 8px; /* Rounded corners */
+            overflow: hidden; /* Ensure rounded corners are visible */
+        }
+        .table th, .table td {
+            vertical-align: middle; /* Center align content */
+        }
+        .btn-custom {
+            background-color: #800020;
+            color: #FFD700;
+            border: none; /* Remove border */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+        .btn-custom:hover {
+            background-color: #600010;
+            color: #FFD700;
+        }
+        .modal-content {
+            border-radius: 10px; /* Rounded corners for modal */
+        }
+        .form-label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <a href="index.html" class="btn btn-secondary">Back to Home</a>
+            <span class="navbar-brand mb-0 h1 mx-auto text-center">Rooms Management</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="d-flex gap-2">
+                            <label class="form-label align-self-center me-2" style="min-width: 60px;">Search</label>
+                            <input type="text" class="form-control" placeholder="Search for rooms...">
+                            <input type="file" id="fileInput" style="display: none;" accept=".xls,.xlsx" onchange="importExcel(event)">
+                            <button class="btn btn-custom" onclick="document.getElementById('fileInput').click();">Import</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Room Id</th>
+                                        <th>Room Type</th>
+                                        <th>Room Name</th>
+                                        <th>Capacity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data will be populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col d-flex justify-content-center gap-2">
+                        <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#dataEntryModal" onclick="setModalAction('add')">Add</button>
+                        <button class="btn btn-custom" data-bs-toggle="modal" data-bs-target="#dataEntryModal" onclick="setModalAction('edit')">Edit</button>
+                        <button class="btn btn-custom">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Data Entry -->
+    <div class="modal fade" id="dataEntryModal" tabindex="-1" aria-labelledby="dataEntryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dataEntryModalLabel">Enter Room Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="roomForm">
+                        <div class="mb-3">
+                            <label for="roomId" class="form-label">Room Id</label>
+                            <input type="text" class="form-control" id="roomId">
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomType" class="form-label">Room Type</label>
+                            <input type="text" class="form-control" id="roomType">
+                        </div>
+                        <div class="mb-3">
+                            <label for="roomName" class="form-label">Room Name</label>
+                            <input type="text" class="form-control" id="roomName">
+                        </div>
+                        <div class="mb-3">
+                            <label for="capacity" class="form-label">Capacity</label>
+                            <input type="text" class="form-control" id="capacity">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveRoom()">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function incrementValue(inputId) {
+            const input = document.getElementById(inputId);
+            let value = parseInt(input.value) || 0;
+            value += 1;
+            input.value = value;
+        }
+
+        // Add input validation to ensure only numbers
+        document.getElementById('capacityInput').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value === '') this.value = '0';
+        });
+
+        document.getElementById('roomsInput').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value === '') this.value = '0';
+        });
+    </script>
+</body>
+</html>
