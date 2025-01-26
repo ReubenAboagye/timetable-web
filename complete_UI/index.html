@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TimeTable Generator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8b0032;
+            --hover-color: #690026;
+            --light-bg: #f5f5f5;
+            --sidebar-bg: #ebe6e6ea;
+            --footer-bg: #8b0032;
+        }
+        
+        body {
+            background-color: var(--light-bg);
+        }
+        
+        .header {
+            background-color: var(--primary-color);
+        }
+        
+        .sidebar {
+            height: calc(100vh - 56px);
+            background-color: var(--sidebar-bg);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .menu-item {
+            background-color: var(--primary-color);
+            color: white;
+            transition: background-color 0.3s;
+            border-radius: 5px;
+            text-decoration: none; /* Remove underline */
+        }
+        
+        .menu-item:hover {
+            background-color: var(--hover-color);
+            color: white;
+        }
+        
+        .grid-button {
+            background-color: var(--primary-color);
+            border: 2px solid var(--hover-color);
+            transition: background-color 0.3s;
+            border-radius: 5px;
+            text-decoration: none; /* Remove underline */
+        }
+        
+        .grid-button:hover {
+            background-color: #b7ba16;
+            border: #b7ba16;
+            cursor: pointer;
+            transform: scale(1.05);
+        }
+        
+        .status-box {
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            color: white;
+        }
+        
+        .footer {
+            background-color: var(--footer-bg);
+            color: white;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        .current-time {
+            color: white;
+        }
+
+        .color-code-circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .accordion-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            transition: background-color 0.3s;
+        }
+
+        .accordion-button:hover {
+            background-color: var(--hover-color);
+        }
+
+        .accordion-body {
+            background-color: var(--light-bg);
+            border: 1px solid var(--primary-color);
+            border-radius: 5px;
+        }
+
+        .dropdown-item {
+            transition: background-color 0.3s;
+            margin-bottom: 0.5rem;
+        }
+
+        .dropdown-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--hover-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar header">
+        <div class="container-fluid">
+            <span class="navbar-brand text-white">TimeTable Generator</span>
+            <div class="current-time" id="currentTime">09:20:12 PM</div>  
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 px-0 sidebar">
+                <div class="d-flex flex-column gap-2 p-2">
+                    <a href="index.html" class="menu-item p-3">
+                        <i class="fas fa-home me-2"></i>Dashboard
+                    </a>
+                    <a href="#" class="menu-item p-3">
+                        <i class="fas fa-calendar-alt me-2"></i>Timetable
+                    </a>
+                    <div class="accordion" id="generateAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingGenerate">
+                                <button class="accordion-button" style="background-color: var(--primary-color); color: white;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGenerate" aria-expanded="true" aria-controls="collapseGenerate">
+                                    <i class="fas fa-plus me-2"></i>Generate
+                                </button>
+                            </h2>
+                            <div id="collapseGenerate" class="accordion-collapse collapse" aria-labelledby="headingGenerate">
+                                <div class="accordion-body" style="background-color: var(--light-bg);">
+                                    <a class="dropdown-item menu-item p-2" href="session.html">
+                                        <i class="fas fa-calendar-alt me-2"></i>Lecturer Timetable
+                                    </a>
+                                    <a class="dropdown-item menu-item p-2" href="session.html">
+                                        <i class="fas fa-calendar-check me-2"></i>Exam Timetable
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion" id="viewAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingView">
+                                <button class="accordion-button" style="background-color: var(--primary-color); color: white;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseView" aria-expanded="true" aria-controls="collapseView">
+                                    <i class="fas fa-eye me-2"></i>View
+                                </button>
+                            </h2>
+                            <div id="collapseView" class="accordion-collapse collapse" aria-labelledby="headingView">
+                                <div class="accordion-body" style="background-color: var(--light-bg);">
+                                    <a class="dropdown-item menu-item p-2" href="#">
+                                        <i class="fas fa-list me-2"></i>All
+                                    </a>
+                                    <a class="dropdown-item menu-item p-2" href="#" data-bs-toggle="modal" data-bs-target="#departmentSearchModal">
+                                        <i class="fas fa-building me-2"></i>Department
+                                    </a>
+                                    <a class="dropdown-item menu-item p-2" href="#" data-bs-toggle="modal" data-bs-target="#classSearchModal">
+                                        <i class="fas fa-users me-2"></i>Class
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 p-4">
+                <!-- Status Message -->
+                <div class="alert alert-info">No timetable generated yet!</div>
+
+                <!-- Registration Status -->
+                <div class="mb-4">
+                    <h5>Registered:</h5>
+                    <div class="d-flex gap-4 flex-wrap">
+                        <div class="status-box" style="background-color: #00bcd4;">0</div>
+                        <div class="status-box" style="background-color: #7986cb;">0</div>
+                        <div class="status-box" style="background-color: #ffcc80;">0</div>
+                        <div class="status-box" style="background-color: #ef5350;">0</div>
+                        <div class="status-box" style="background-color: #81c784;">0</div>
+                        <div class="status-box" style="background-color: #ec407a;">0</div>
+                    </div>
+                </div>
+
+                <!-- Grid Buttons -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        <a href="department.html" class="grid-button text-white p-3 d-flex align-items-center justify-content-center gap-2">
+                            <i class="fas fa-building"></i>
+                            <span>Department</span>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="buildings.html" class="grid-button text-white p-3 d-flex align-items-center justify-content-center gap-2">
+                            <i class="fas fa-city"></i>
+                            <span>Buildings</span>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="lecturers.html" class="grid-button text-white p-3 d-flex align-items-center justify-content-center gap-2">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <span>Lecturers</span>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="rooms.html" class="grid-button text-white p-3 d-flex align-items-center justify-content-center gap-2">
+                            <i class="fas fa-door-open"></i>
+                            <span>Rooms</span>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="courses.html" class="grid-button text-white p-3 d-flex align-items-center justify-content-center gap-2">
+                            <i class="fas fa-book"></i>
+                            <span>Course</span>
+                        </a>
+                    </div>
+                    <div class="col-md-6">
+                        <a href="classes.html" class="grid-button text-white p-3 d-flex align-items-center justify-content-center gap-2">
+                            <i class="fas fa-users"></i>
+                            <span>Classes</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Color Code -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Color Code</h5>
+                        <div class="row g-3">
+                            <div class="col-md-4 d-flex align-items-center gap-2">
+                                <div class="color-code-circle" style="background-color: #00bcd4;"></div>
+                                <span>Department</span>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center gap-2">
+                                <div class="color-code-circle" style="background-color: #7986cb;"></div>
+                                <span>Lecturers</span>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center gap-2">
+                                <div class="color-code-circle" style="background-color: #ffcc80;"></div>
+                                <span>Course</span>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center gap-2">
+                                <div class="color-code-circle" style="background-color: #ef5350;"></div>
+                                <span>Buildings</span>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center gap-2">
+                                <div class="color-code-circle" style="background-color: #81c784;"></div>
+                                <span>Rooms</span>
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center gap-2">
+                                <div class="color-code-circle" style="background-color: #ec407a;"></div>
+                                <span>Classes</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer text-center">
+        NB: This is a prototype << >> Data produced from this software may not be reliable. Proceed with CAUTION!!
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour12: true,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('currentTime').textContent = timeString;
+        }
+        
+        // Update time every second
+        setInterval(updateTime, 1000);
+        updateTime(); // Initial call
+        
+        // Add click handlers for menu items
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+
+        // Add click handlers for grid buttons
+        document.querySelectorAll('.grid-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const text = button.querySelector('span').textContent;
+                console.log(`${text} clicked`);
+            });
+        });
+
+        // Add click event for the search button for department
+        document.getElementById('searchDepartmentButton').addEventListener('click', function() {
+            const departmentName = document.getElementById('departmentSearchInput').value;
+            if (departmentName) {
+                alert(`Searching for department: ${departmentName}`);
+            } else {
+                alert('Please enter a department name.');
+            }
+        });
+
+        // Add click event for the search button for class
+        document.getElementById('searchClassButton').addEventListener('click', function() {
+            const className = document.getElementById('classSearchInput').value;
+            if (className) {
+                alert(`Searching for class: ${className}`);
+            } else {
+                alert('Please enter a class name.');
+            }
+        });
+    </script>
+
+    <!-- Modal for Department Search -->
+    <div class="modal fade" id="departmentSearchModal" tabindex="-1" aria-labelledby="departmentSearchModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="departmentSearchModalLabel">Search for Department</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="departmentSearchInput" placeholder="Enter department name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="searchDepartmentButton">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Class Search -->
+    <div class="modal fade" id="classSearchModal" tabindex="-1" aria-labelledby="classSearchModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="classSearchModalLabel">Search for Class</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" class="form-control" id="classSearchInput" placeholder="Enter class name">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="searchClassButton">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
